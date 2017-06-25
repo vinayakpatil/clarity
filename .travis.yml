@@ -13,6 +13,7 @@ env:
 
 sudo: required
 dist: trusty
+group: edge
 
 addons:
   apt:
@@ -39,6 +40,7 @@ before_install:
 
 before_script:
   - npm install -g gemini
+  - npm install -g html-reporter
   - npm install -g selenium-standalone
   - selenium-standalone install
   - xvfb-run --server-args="-screen 0, 1600x2400x24" selenium-standalone start > selenium.txt &

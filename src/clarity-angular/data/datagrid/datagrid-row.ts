@@ -7,12 +7,12 @@ import { Component, Input, Output, EventEmitter, ContentChildren, QueryList } fr
 import { Selection, SelectionType } from "./providers/selection";
 import { RowActionService } from "./providers/row-action-service";
 import { GlobalExpandableRows } from "./providers/global-expandable-rows";
-import { RowExpand } from "./providers/row-expand";
 import { LoadingListener } from "../../utils/loading/loading-listener";
 import { HideableColumnService } from "./providers/hideable-column.service";
 import { DatagridHideableColumn } from "./datagrid-hideable-column";
 import { DatagridCell } from "./datagrid-cell";
 import { Subscription } from "rxjs/Subscription";
+import {Expand} from "../../utils/expand/providers/expand";
 
 
 let nbRow: number = 0;
@@ -40,7 +40,7 @@ let nbRow: number = 0;
             <clr-dg-cell *ngIf="globalExpandable.hasExpandableRow"
                          class="datagrid-expandable-caret datagrid-fixed-column">
                 <ng-container *ngIf="expand.expandable">
-                    <button (click)="toggleExpand()" *ngIf="!expand.loading">
+                    <button (click)="toggleExpand()" *ngIf="!expand.loading" type="button">
                         <clr-icon shape="caret" [attr.dir]="expand.expanded?'down':'right'"></clr-icon>
                     </button>
                     <div class="spinner spinner-sm" *ngIf="expand.loading"></div>
@@ -67,7 +67,7 @@ let nbRow: number = 0;
         "[class.datagrid-row]": "true",
         "[class.datagrid-selected]": "selected"
     },
-    providers: [ RowExpand, { provide: LoadingListener, useExisting: RowExpand } ]
+    providers: [ Expand, { provide: LoadingListener, useExisting: Expand } ]
 })
 export class DatagridRow {
     public id: string;
@@ -81,7 +81,7 @@ export class DatagridRow {
     @Input("clrDgItem") item: any;
 
     constructor( public selection: Selection, public rowActionService: RowActionService,
-                 public globalExpandable: GlobalExpandableRows, public expand: RowExpand,
+                 public globalExpandable: GlobalExpandableRows, public expand: Expand,
                  public hideableColumnService: HideableColumnService ) {
         this.id = "clr-dg-row" + (nbRow++);
     }

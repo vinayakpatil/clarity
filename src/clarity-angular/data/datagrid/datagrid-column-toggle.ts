@@ -10,16 +10,18 @@ import { Point } from "../../popover/common/popover";
         <button
                 #anchor
                 (click)="toggleUI()"
-                class="btn btn-sm btn-link column-toggle--action">
+                class="btn btn-sm btn-link column-toggle--action"
+                type="button">
             <clr-icon shape="view-columns"></clr-icon>
         </button>
         <div class="column-switch"
-             *clrPopover="open; anchor: anchor; anchorPoint: anchorPoint; popoverPoint: popoverPoint">
+             *clrPopoverOld="open; anchor: anchor; anchorPoint: anchorPoint; popoverPoint: popoverPoint">
             <div class="switch-header">
                 Show Columns
                 <button
-                        class="btn btn-sm btn-link"
-                        (click)="toggleUI()">
+                    class="btn btn-sm btn-link"
+                    (click)="toggleUI()"
+                    type="button">
                     <clr-icon
                             shape="close"></clr-icon>
                 </button>
@@ -38,13 +40,15 @@ import { Point } from "../../popover/common/popover";
                     <button
                             class="btn btn-sm btn-link p6 text-uppercase"
                             [disabled]="allColumnsVisible"
-                            (click)="selectAll()">Select All
+                            (click)="selectAll()"
+                            type="button">Select All
                     </button>
                 </div>
                 <div class="action-right">
                     <button
                             (click)="toggleUI()"
-                            class="btn btn-primary">
+                            class="btn btn-primary"
+                            type="button">
                         Ok
                     </button>
                 </div>
@@ -75,7 +79,6 @@ export class DatagridColumnToggle implements OnInit, OnDestroy {
      * @type {Array}
      */
     public columns: DatagridHideableColumn[] = [];
-    // public lastColumnshowing: boolean = false;
 
     public get allColumnsVisible(): boolean {
         return this._allColumnsVisible;
@@ -102,11 +105,11 @@ export class DatagridColumnToggle implements OnInit, OnDestroy {
                     this.columns.push(col);
                 }
             });
-        });
+            });
     }
 
     ngOnDestroy() {
-        // this._hideableColumnChangeSubscription.unsubscribe();
+        this._hideableColumnChangeSubscription.unsubscribe();
     }
 
     selectAll() {

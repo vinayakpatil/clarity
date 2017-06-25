@@ -3,7 +3,7 @@
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
-import {Component, Input, Output, EventEmitter, OnDestroy} from "@angular/core";
+import {Component, Input, Output, EventEmitter, OnDestroy, OnInit} from "@angular/core";
 
 import {Page} from "./providers/page";
 import {Subscription} from "rxjs/Subscription";
@@ -13,32 +13,40 @@ import {Subscription} from "rxjs/Subscription";
     template: `
         <ul class="pagination" *ngIf="page.last > 1">
             <li *ngIf="page.current > 1">
-                <button class="pagination-previous" (click)="page.previous()"></button>
+                <button 
+                    class="pagination-previous" 
+                    (click)="page.previous()"
+                    type="button"></button>
             </li>
             <li *ngIf="page.current > 2">
-                <button (click)="page.current = 1">1</button>
+                <button (click)="page.current = 1" type="button">1</button>
             </li>
             <li *ngIf="page.current > 3">...</li>
-            <li *ngIf="page.current > 1">
-                <button (click)="page.previous()">{{page.current - 1}}</button>
-            </li>
-            <li class="pagination-current">{{page.current}}</li>
-            <li *ngIf="page.current < page.last">
-                <button (click)="page.next()">{{page.current + 1}}</button>
+            <li *ngFor="let pageNum of middlePages" [class.pagination-current]="pageNum === page.current">
+                <button 
+                    *ngIf="pageNum !== page.current; else noButton" 
+                    (click)="page.current = pageNum"
+                    type="button">{{pageNum}}</button>
+                <ng-template #noButton>{{pageNum}}</ng-template>
             </li>
             <li *ngIf="page.current < page.last - 2">...</li>
             <li *ngIf="page.current < page.last - 1">
-                <button (click)="page.current = page.last">{{page.last}}</button>
+                <button 
+                    (click)="page.current = page.last"
+                    type="button">{{page.last}}</button>
             </li>
             <li *ngIf="page.current < page.last">
-                <button class="pagination-next" (click)="page.next()"></button>
+                <button 
+                    class="pagination-next" 
+                    (click)="page.next()"
+                    type="button"></button>
             </li>
         </ul>
     `,
     // IE10 comes to pollute even our components declaration
     styles: [`:host { display: block; }`]
 })
-export class DatagridPagination implements OnDestroy {
+export class DatagridPagination implements OnDestroy, OnInit {
     constructor(public page: Page) {
         /*
          * Default page size is 10.
@@ -47,7 +55,14 @@ export class DatagridPagination implements OnDestroy {
          */
         page.size = 10;
 
-        this._pageSubscription = page.change.subscribe(current => this.currentChanged.emit(current));
+    }
+
+    /**********
+     * Subscription to the Page service for page changes.
+     * Note: this only emits after the datagrid is initialized/stabalized and the page changes.
+     */
+    ngOnInit() {
+        this._pageSubscription = this.page.change.subscribe(current => this.currentChanged.emit(current));
     }
 
     /**
@@ -138,5 +153,21 @@ export class DatagridPagination implements OnDestroy {
      */
     public get lastItem(): number {
         return this.page.lastItem;
+    }
+
+    /**
+     * Conditionally adds page numbers before and after the current page
+     * @returns {number[]}
+     */
+    public get middlePages(): number[] {
+        let middlePages: number[] = [];
+        if (this.page.current > 1) {
+            middlePages.push(this.page.current - 1);
+        }
+        middlePages.push(this.page.current);
+        if (this.page.current < this.page.last) {
+            middlePages.push(this.page.current + 1);
+        }
+        return middlePages;
     }
 }
