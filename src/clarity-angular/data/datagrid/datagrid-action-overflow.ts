@@ -3,16 +3,18 @@
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
-import {
-    Component, EventEmitter, Input, Output, OnDestroy
-} from "@angular/core";
+import {Component, EventEmitter, Input, OnDestroy, Output} from "@angular/core";
+
 import {Point} from "../../popover/common/popover";
+
 import {RowActionService} from "./providers/row-action-service";
 
 @Component({
     selector: "clr-dg-action-overflow",
     template: `
-        <clr-icon #anchor shape="ellipsis-vertical" class="datagrid-action-toggle" (click)="toggle($event)"></clr-icon>
+        <button (click)="toggle($event)" class="datagrid-action-toggle" #anchor>
+            <clr-icon shape="ellipsis-vertical"></clr-icon>
+        </button>
         <ng-template [(clrPopoverOld)]="open" [clrPopoverOldAnchor]="anchor" [clrPopoverOldAnchorPoint]="anchorPoint"
                      [clrPopoverOldPopoverPoint]="popoverPoint">
             <div #menu class="datagrid-action-overflow" (clrOutsideClick)="close($event)" [clrStrict]="true">
@@ -23,7 +25,6 @@ import {RowActionService} from "./providers/row-action-service";
 })
 
 export class DatagridActionOverflow implements OnDestroy {
-
     public anchorPoint: Point = Point.RIGHT_CENTER;
     public popoverPoint: Point = Point.LEFT_CENTER;
 
@@ -45,7 +46,7 @@ export class DatagridActionOverflow implements OnDestroy {
 
     @Input("clrDgActionOverflowOpen")
     public set open(open: boolean) {
-        let boolOpen = !!open;
+        const boolOpen = !!open;
         if (boolOpen !== this._open) {
             this._open = boolOpen;
             this.openChanged.emit(boolOpen);

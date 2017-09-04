@@ -14,7 +14,6 @@ declare interface Module {
     id: string;
 }
 
-interface Window { 
+interface Window {
     ClarityIcons: any;
-    DOMPurify: any;
 }

@@ -3,9 +3,9 @@
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
-import { Injectable } from "@angular/core";
-import { Subject } from "rxjs/Subject";
-import { Observable } from "rxjs/Observable";
+import {Injectable} from "@angular/core";
+import {Observable} from "rxjs/Observable";
+import {Subject} from "rxjs/Subject";
 
 @Injectable()
 
@@ -19,7 +19,6 @@ import { Observable } from "rxjs/Observable";
  *
  */
 export class IfOpenService {
-
     /********
      * @property _openChange
      *
@@ -64,9 +63,9 @@ export class IfOpenService {
      *
      * @param value
      */
-    public set open( value: boolean ) {
+    public set open(value: boolean) {
         value = !!value;
-        if ( this._open !== value ) {
+        if (this._open !== value) {
             this._open = value;
             this._openChange.next(value);
         }
@@ -82,5 +81,16 @@ export class IfOpenService {
      */
     public get open(): boolean {
         return this._open;
+    }
+
+    /**
+     * Sometimes, we need to remember the event that triggered the toggling to avoid loops.
+     * This is for instance the case of components that open on a click, but close on a click outside.
+     */
+    public originalEvent: any;
+    public toggleWithEvent(event: any) {
+        this.originalEvent = event;
+        this.open = !this.open;
+        delete this.originalEvent;
     }
 }

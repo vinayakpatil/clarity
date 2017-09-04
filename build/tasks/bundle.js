@@ -16,28 +16,15 @@ gulp.task("bundle:icons:sfx", ["typescript:icons"], function () {
 
     var buildOpts = {minify: true, mangle: false, normalize: true};
 
-    var builder = new Builder();
+    var builder = new Builder("dist/");
     builder.config({
-        map: {
-            "dompurify": "node_modules/dompurify"
-        },
-        paths: {
-            "clarity-icons/": "dist/clarity-icons/"
-        },
         packages: {
-            'clarity-icons': {
-                defaultExtension: 'js'
-           },
-           "dompurify": {
-               defaultExtension: 'js',
-               main: 'src/purify.js'
-           }
+            'clarity-icons': {defaultExtension: 'js'}
         }
     });
 
-    return builder.buildStatic(
-        "clarity-icons/clarity-icons-sfx.js",
-        "dist/bundles/clarity-icons.min.js", buildOpts).catch(function (err) {
+    return builder.buildStatic("clarity-icons/clarity-icons-sfx.js", "dist/bundles/clarity-icons.min.js", buildOpts)
+        .catch(function (err) {
             console.error(err);
             process.exit(1);
         });
@@ -47,14 +34,8 @@ gulp.task("bundle:icons:sfx", ["typescript:icons"], function () {
 gulp.task("bundle:icons-lite:sfx", ["typescript:icons"], function () {
     var buildOpts = {minify: true, mangle: false, normalize: true};
 
-    var builder = new Builder();
+    var builder = new Builder("dist/");
     builder.config({
-        map: {
-            "dompurify": "node_modules/dompurify/src/purify.js"
-        },
-        paths: {
-            "clarity-icons/": "dist/clarity-icons/"
-        },
         packages: {
             'clarity-icons': {main: 'index.js', defaultExtension: 'js'}
         }
@@ -80,7 +61,19 @@ gulp.task("bundle:icons:shapes", ["typescript:icons"], function () {
         }
     });
 
-    builder.buildStatic("clarity-icons/shapes/essential-shapes.js", "dist/bundles/essential-shapes.umd.js", buildOpts)
+    builder.buildStatic("clarity-icons/shapes/essential-shapes.js", "dist/bundles/essential-shapes.min.js", buildOpts)
+        .catch(function (err) {
+            console.error(err);
+            process.exit(1);
+        });
+
+    builder.buildStatic("clarity-icons/shapes/commerce-shapes.js", "dist/bundles/commerce-shapes.min.js", buildOpts)
+        .catch(function (err) {
+            console.error(err);
+            process.exit(1);
+        });
+
+    builder.buildStatic("clarity-icons/shapes/media-shapes.js", "dist/bundles/media-shapes.min.js", buildOpts)
         .catch(function (err) {
             console.error(err);
             process.exit(1);
@@ -92,11 +85,18 @@ gulp.task("bundle:icons:shapes", ["typescript:icons"], function () {
             process.exit(1);
         });
 
+    builder.buildStatic("clarity-icons/shapes/travel-shapes.js", "dist/bundles/travel-shapes.min.js", buildOpts)
+        .catch(function (err) {
+            console.error(err);
+            process.exit(1);
+        });
+
     builder.buildStatic("clarity-icons/shapes/technology-shapes.js", "dist/bundles/technology-shapes.min.js", buildOpts)
         .catch(function (err) {
             console.error(err);
             process.exit(1);
         });
+
 });
 
 /**

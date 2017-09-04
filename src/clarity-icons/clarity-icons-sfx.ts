@@ -4,13 +4,9 @@
  * The full license information can be found in LICENSE in the root directory of this project.
  */
 
-import { ClarityIcons } from "./index";
-import { EssentialShapes } from "./shapes/essential-shapes";
-import { SocialShapes } from "./shapes/social-shapes";
-import { TechnologyShapes } from "./shapes/technology-shapes";
+import {ClarityIcons} from "./index";
+import {AllShapes} from "./shapes/all-shapes";
 
-ClarityIcons.add(EssentialShapes);
-ClarityIcons.add(SocialShapes);
-ClarityIcons.add(TechnologyShapes);
+ClarityIcons.add(AllShapes);
 
-export { ClarityIcons };
+export {ClarityIcons};

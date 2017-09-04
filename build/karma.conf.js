@@ -43,10 +43,6 @@ module.exports = function (config) {
             { pattern: 'node_modules/@angular/**/*.js', included: false, watched: false },
             { pattern: 'node_modules/@angular/**/*.js.map', included: false, watched: false },
 
-            // DOMPurify
-            { pattern: 'node_modules/dompurify/**/*.js', included: false, watched: false },
-            { pattern: 'node_modules/dompurify/**/*.js.map', included: false, watched: false },
-
             { pattern: 'build/karma-test-shim.js', included: true, watched: false },
 
             // Clarity's bundles
@@ -86,25 +82,16 @@ module.exports = function (config) {
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: false,
-        browsers: ["Chrome_Canary_Headless"],
+        browsers: ["Chrome_Headless"],
         singleRun: true,
 
         customLaunchers: {
-            Chrome_Canary_Headless: {
-                base: 'ChromeCanary',
-                flags: ['--headless', '--disable-gpu', '--remote-debugging-port=9222']
-            },
             Chrome_Headless: {
                 base: 'Chrome',
                 flags: ['--headless', '--disable-gpu', '--remote-debugging-port=9222']
             }
 
         }
-    }
-
-    // Override for Travis CI
-    if(process.env.TRAVIS && process.env.TEST_SUITE === "test") {
-        configuration.browsers = ['Chrome_Headless'];
     }
 
     config.set(configuration);

@@ -3,23 +3,12 @@
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
-import {
-    Directive,
-    TemplateRef,
-    ViewContainerRef,
-    Input,
-    Output,
-    EventEmitter,
-    EmbeddedViewRef,
-    OnDestroy
-} from "@angular/core";
-
-import { IfOpenService } from "./if-open.service";
+import {Directive, EventEmitter, Input, OnDestroy, Output, TemplateRef, ViewContainerRef} from "@angular/core";
 import {Subscription} from "rxjs/Subscription";
 
-@Directive({
-    selector: "[clrIfOpen]"
-})
+import {IfOpenService} from "./if-open.service";
+
+@Directive({selector: "[clrIfOpen]"})
 
 /**********
  *
@@ -43,7 +32,7 @@ export class IfOpenDirective implements OnDestroy {
      * @param value
      */
     @Input("clrIfOpen")
-    public set open( value: boolean ) {
+    public set open(value: boolean) {
         this.ifOpenService.open = value;
     }
 
@@ -69,9 +58,8 @@ export class IfOpenDirective implements OnDestroy {
         return this.ifOpenService.open;
     }
 
-    constructor( private ifOpenService: IfOpenService, private template: TemplateRef<any>,
-                 private container: ViewContainerRef ) {
-
+    constructor(private ifOpenService: IfOpenService, private template: TemplateRef<any>,
+                private container: ViewContainerRef) {
         this.subscription = this.ifOpenService.openChange.subscribe((change) => {
             this.updateView(change);
             this.openChange.emit(change);
@@ -86,15 +74,9 @@ export class IfOpenDirective implements OnDestroy {
      * Clears all views from the ViewContainerRef
      * @param value
      */
-    public updateView( value: boolean ) {
-        if ( value ) {
-            let embeddedViewRef: EmbeddedViewRef<any>
-                = <EmbeddedViewRef<any>>this.container.createEmbeddedView(this.template);
-
-            //TODO: Not sure of the risks associated with using this. Find an alternative.
-            //Needed for find the correct height and width of dynamically created views
-            //inside of the popover. For Eg: Button Groups, Dropdown.
-            embeddedViewRef.detectChanges();
+    public updateView(value: boolean) {
+        if (value) {
+            this.container.createEmbeddedView(this.template);
         } else {
             this.container.clear();
         }

@@ -52,6 +52,7 @@
             .content-area {
                 flex: 1 1 auto;
                 overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
                 padding: $clr-content-area-padding-top $clr-content-area-padding-right $clr-content-area-padding-bottom $clr-content-area-padding-left;
 
                 & > :first-child {
@@ -63,6 +64,11 @@
                 flex: 0 0 auto;
                 order: -1;
                 overflow: hidden; //overflow-y enabled in .sidenav-content
+            }
+
+            .clr-vertical-nav {
+                flex: 0 0 auto;
+                order: -1;
             }
         }
     }

@@ -158,41 +158,42 @@ let breakUpAllShapeTemplates = (shapes) => {
 
 let makeSVG = (shapeTitle, shapeContent) => {
 
-    let openingTag = `<svg version="1.1" viewBox="0 0 36 36" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">`;
+    let openingTag = `<svg version="1.1" width="36" height="36"  viewBox="0 0 36 36" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">`;
     let title = `<title>${shapeTitle}</title>`;
+    let transparentBG = `<rect x="0" y="0" width="36" height="36" fill-opacity="0"/>`;
     let closingTag = `</svg>`;
 
     return `${openingTag}
                 ${title}
                 ${shapeContent}
+                ${transparentBG}
             ${closingTag}`;
 
 
 };
 
 
-let writeSVGicons = (callback) => {
+//use shapes from this directory
+const SOURCE_PATH = path.join(__dirname, "../dist/clarity-icons/shapes");
 
-    //use shapes from this directory
-    const sourcePath = path.join(__dirname, "../dist/clarity-icons/shapes");
+//main directory to contain svg files
+const TARGET_DIR_NAME = "svg-source";
 
-    //main directory to contain svg files
-    const targetDirName = "svg-source";
+//main directory to contain svg files will be created at the same path as the source path
+const TARGET_PATH = path.join(SOURCE_PATH, TARGET_DIR_NAME);
 
-    //main directory to contain svg files will be created at the same path as the source path
-    const targetPath = path.join(sourcePath, targetDirName);
+let makeSVGset = (setName, callback) => {
 
-    const coreShapes = require(sourcePath + "/core-shapes.js").CoreShapes;
-    const essentialShapes = require(sourcePath + "/essential-shapes.js").EssentialShapes;
-    const socialShapes = require(sourcePath + "/social-shapes.js").SocialShapes;
-    const technologyShapes = require(sourcePath + "/technology-shapes.js").TechnologyShapes;
+    let importSet = require(SOURCE_PATH + "/" + setName + ".js");
+    let exportedName = Object.getOwnPropertyNames(importSet)[1];
+    let setShapes = importSet[exportedName];
 
-    let coreShapesContainerDir = path.join(targetPath, "core-shapes");
+    let setShapesContainerDir = path.join(TARGET_PATH, setName);
 
-    createContainerDir(coreShapesContainerDir)
+    createContainerDir(setShapesContainerDir)
         .then((containerDirPath)=> {
 
-            let shapes = breakUpAllShapeTemplates(coreShapes);
+            let shapes = breakUpAllShapeTemplates(setShapes);
 
             let shapeNames = Object.keys(shapes);
 
@@ -210,99 +211,35 @@ let writeSVGicons = (callback) => {
         })
         .then(()=> {
 
-            console.log("Completed writing core-shapes svg files");
+            console.log(`Completed writing ${setName} svg files`);
 
-            let essentialShapesContainerDir = path.join(targetPath, "essential-shapes");
-
-            return createContainerDir(essentialShapesContainerDir);
-
-
-        })
-        .then((containerDirPath)=> {
-
-            let shapes = breakUpAllShapeTemplates(essentialShapes);
-
-            let shapeNames = Object.keys(shapes);
-
-            return Promise.all(shapeNames.map((shapeName)=> {
-
-                //the path that a new file will be written to
-                let filePath = path.join(containerDirPath, getFileName(shapeName));
-
-                return writeToFile(filePath, makeSVG(shapeName, shapes[shapeName]));
-
-            }));
-
-
-        })
-        .then(()=> {
-
-            console.log("Completed writing essential-shapes svg files");
-
-            let socialShapesContainerDir = path.join(targetPath, "social-shapes");
-
-            return createContainerDir(socialShapesContainerDir);
-
-
-        })
-        .then((containerDirPath)=> {
-
-            let shapes = breakUpAllShapeTemplates(socialShapes);
-
-            let shapeNames = Object.keys(shapes);
-
-            return Promise.all(shapeNames.map((shapeName)=> {
-
-                //the path that a new file will be written to
-                let filePath = path.join(containerDirPath, getFileName(shapeName));
-
-                return writeToFile(filePath, makeSVG(shapeName, shapes[shapeName]));
-
-            }));
-
-
-        })
-        .then(()=> {
-
-            console.log("Completed writing social-shapes svg files");
-
-            let technologyShapesContainerDir = path.join(targetPath, "technology-shapes");
-
-            return createContainerDir(technologyShapesContainerDir);
-            s
-
-
-        })
-        .then((containerDirPath)=> {
-
-            let shapes = breakUpAllShapeTemplates(technologyShapes);
-
-            let shapeNames = Object.keys(shapes);
-
-            return Promise.all(shapeNames.map((shapeName)=> {
-
-                //the path that a new file will be written to
-                let filePath = path.join(containerDirPath, getFileName(shapeName));
-
-                return writeToFile(filePath, makeSVG(shapeName, shapes[shapeName]));
-
-            }));
-
-
-        })
-        .then(()=> {
-
-            console.log("Completed writing technology-shapes svg files");
             callback();
 
 
         })
         .catch((error)=> {
 
-
             callback(error);
 
         });
+};
+
+
+let writeSVGicons = (sets, callback) => {
+
+    let numOfTasksCompleted = 0;
+
+    sets.forEach((setName) => {
+        makeSVGset(setName, () => {
+
+            numOfTasksCompleted++;
+
+            if (numOfTasksCompleted === sets.length) {
+                callback();
+            }
+        });
+    });
+
 
 };
 

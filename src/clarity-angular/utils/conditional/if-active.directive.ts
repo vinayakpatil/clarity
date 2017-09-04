@@ -3,23 +3,12 @@
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
-import {
-    Directive,
-    TemplateRef,
-    ViewContainerRef,
-    Input,
-    Output,
-    EventEmitter,
-    Inject,
-    OnDestroy
-} from "@angular/core";
-
-import {IF_ACTIVE_ID, IfActiveService} from "./if-active.service";
+import {Directive, EventEmitter, Inject, Input, OnDestroy, Output, TemplateRef, ViewContainerRef} from "@angular/core";
 import {Subscription} from "rxjs/Subscription";
 
-@Directive({
-    selector: "[clrIfActive]"
-})
+import {IF_ACTIVE_ID, IfActiveService} from "./if-active.service";
+
+@Directive({selector: "[clrIfActive]"})
 
 /**********
  *
@@ -32,24 +21,26 @@ import {Subscription} from "rxjs/Subscription";
  *
  */
 export class IfActiveDirective implements OnDestroy {
-
     private subscription: Subscription;
     private wasActive: boolean = false;
 
-    constructor( private ifActiveService: IfActiveService, @Inject(IF_ACTIVE_ID) private id: number,
-                 private template: TemplateRef<any>, private container: ViewContainerRef ) {
+    constructor(private ifActiveService: IfActiveService, @Inject(IF_ACTIVE_ID) private id: number,
+                private template: TemplateRef<any>, private container: ViewContainerRef) {
+        this.checkAndUpdateView(ifActiveService.current);
 
-        this.updateView(ifActiveService.current === this.id);
+        this.subscription = this.ifActiveService.currentChange.subscribe((newCurrentId) => {
+            this.checkAndUpdateView(newCurrentId);
+        });
+    }
 
-        this.subscription = this.ifActiveService.currentChange.subscribe((newId) => {
-                let isNowActive = newId === this.id;
-                // only emit if the new active state is changed since last time.
-                if (isNowActive !== this.wasActive) {
-                    this.updateView(isNowActive);
-                    this.activeChange.emit(isNowActive);
-                    this.wasActive = isNowActive;
-                }
-            });
+    private checkAndUpdateView(currentId: number) {
+        const isNowActive = currentId === this.id;
+        // only emit if the new active state is changed since last time.
+        if (isNowActive !== this.wasActive) {
+            this.updateView(isNowActive);
+            this.activeChange.emit(isNowActive);
+            this.wasActive = isNowActive;
+        }
     }
 
     /*********
@@ -61,7 +52,7 @@ export class IfActiveDirective implements OnDestroy {
      * @param value
      */
     @Input("clrIfActive")
-    public set active( value: boolean ) {
+    public set active(value: boolean) {
         if (value) {
             this.ifActiveService.current = this.id;
         }
@@ -97,8 +88,8 @@ export class IfActiveDirective implements OnDestroy {
      * Clears all views from the ViewContainerRef
      * @param value
      */
-    public updateView( value: boolean ) {
-        if ( value ) {
+    public updateView(value: boolean) {
+        if (value) {
             this.container.createEmbeddedView(this.template);
         } else {
             this.container.clear();
