@@ -26,6 +26,7 @@ import {StaticButtonGroupBasicStructureDemo} from "./static/basic-structure/basi
 import {ButtonGroupStaticDemo} from "./static/button-group-static";
 import {ButtonGroupCardsDemo} from "./static/cards/button-group-cards";
 import {ButtonGroupCheckboxesDemo} from "./static/checkbox/button-group-checkboxes";
+import {StaticIconButtonGroupDemo} from "./static/icon-buttons/icon-button-group";
 import {ButtonGroupIconsTextDemo} from "./static/icons-with-text/button-group-icon-text";
 import {ButtonGroupIconsDemo} from "./static/icons/button-group-icons";
 import {StaticMenuDirectionsDemo} from "./static/menu-directions/menu-directions";
@@ -44,31 +45,32 @@ const ROUTES: Routes = [{
                 {path: "basic-structure", component: StaticButtonGroupBasicStructureDemo},
                 {path: "directions", component: StaticMenuDirectionsDemo}, {path: "types", component: ButtonGroupTypes},
                 {path: "icons", component: ButtonGroupIconsDemo},
+                {path: "icon-button-group", component: StaticIconButtonGroupDemo},
                 {path: "icons-with-text", component: ButtonGroupIconsTextDemo},
                 {path: "checkboxes", component: ButtonGroupCheckboxesDemo},
                 {path: "radios", component: ButtonGroupRadiosDemo}, {path: "cards", component: ButtonGroupCardsDemo}
             ]
         },
         {
-          path: "angular",
-          component: ButtonGroupAngularDemo,
-          children: [
-              {path: "", redirectTo: "basic-structure", pathMatch: "full"},
-              {path: "basic-structure", component: BasicButtonGroupDemo},
-              {path: "directions", component: MenuDirectionsDemo},
-              {path: "icon-button", component: IconButtonGroupDemo},
-              {path: "hide-overflow", component: HideShowOverflowToggleDemo},
-              {path: "mixed-buttons", component: MixedButtonGroupDemo},
-              {path: "move-button-in-menu", component: MoveButtonInMenuDemo},
-              {path: "move-multiple-buttons-in-menu", component: MoveMultipleButtonInMenuDemo},
-              {path: "move-all-in-menu", component: MoveAllInMenuDemo},
-              {path: "projection-update-test-1", component: ProjectionUpdateTest1Demo},
-              {path: "projection-update-test-2", component: ProjectionUpdateTest2Demo},
-              {path: "projection-update-test-3", component: ProjectionUpdateTest3Demo},
-              {path: "projection-update-test-4", component: ProjectionUpdateTest4Demo},
-              {path: "projection-update-test-5", component: ProjectionUpdateTest5Demo},
-              {path: "projection-update-test-6", component: ProjectionUpdateTest6Demo},
-          ]
+            path: "angular",
+            component: ButtonGroupAngularDemo,
+            children: [
+                {path: "", redirectTo: "basic-structure", pathMatch: "full"},
+                {path: "basic-structure", component: BasicButtonGroupDemo},
+                {path: "directions", component: MenuDirectionsDemo},
+                {path: "icon-button", component: IconButtonGroupDemo},
+                {path: "hide-overflow", component: HideShowOverflowToggleDemo},
+                {path: "mixed-buttons", component: MixedButtonGroupDemo},
+                {path: "move-button-in-menu", component: MoveButtonInMenuDemo},
+                {path: "move-multiple-buttons-in-menu", component: MoveMultipleButtonInMenuDemo},
+                {path: "move-all-in-menu", component: MoveAllInMenuDemo},
+                {path: "projection-update-test-1", component: ProjectionUpdateTest1Demo},
+                {path: "projection-update-test-2", component: ProjectionUpdateTest2Demo},
+                {path: "projection-update-test-3", component: ProjectionUpdateTest3Demo},
+                {path: "projection-update-test-4", component: ProjectionUpdateTest4Demo},
+                {path: "projection-update-test-5", component: ProjectionUpdateTest5Demo},
+                {path: "projection-update-test-6", component: ProjectionUpdateTest6Demo},
+            ]
         }
     ]
 }];

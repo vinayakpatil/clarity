@@ -96,6 +96,7 @@ export default function(): void {
                     context.testComponent.nbRefreshed = 0;
                     const sort: Sort = context.getClarityProvider(Sort);
                     sort.toggle(new TestComparator());
+                    context.detectChanges();
                     expect(context.testComponent.nbRefreshed).toBe(1);
                 });
 
@@ -104,6 +105,23 @@ export default function(): void {
                     const filters: FiltersProvider = context.getClarityProvider(FiltersProvider);
                     const filter = new TestFilter();
                     filters.add(filter);
+                    context.detectChanges();
+                    expect(context.testComponent.nbRefreshed).toBe(1);
+                });
+
+                it("emits once when the filters change when currentPage > 1", function() {
+                    // filter change should set the page to 1, so we expect two events that trigger emits
+                    // datagrid should consolidate and still emit once
+                    context.testComponent.items = [1, 2, 3, 4, 5, 6];
+                    context.detectChanges();
+                    const page: Page = context.getClarityProvider(Page);
+                    page.size = 2;
+                    page.current = 2;
+                    context.testComponent.nbRefreshed = 0;
+                    const filters: FiltersProvider = context.getClarityProvider(FiltersProvider);
+                    const filter = new TestFilter();
+                    filters.add(filter);
+                    context.detectChanges();
                     expect(context.testComponent.nbRefreshed).toBe(1);
                 });
 
@@ -111,6 +129,7 @@ export default function(): void {
                     context.testComponent.nbRefreshed = 0;
                     const page: Page = context.getClarityProvider(Page);
                     page.current = 2;
+                    context.detectChanges();
                     expect(context.testComponent.nbRefreshed).toBe(1);
                 });
 
@@ -126,6 +145,7 @@ export default function(): void {
                     const page: Page = context.getClarityProvider(Page);
                     page.size = 2;
                     page.current = 2;
+                    context.detectChanges();
                     expect(context.testComponent.latestState).toEqual({
                         page: {
                             from: 2,
@@ -150,6 +170,7 @@ export default function(): void {
                     filters.add(customFilter);      // custom filter
                     filters.add(testStringFilter);  // custom StringFilter ??
                     filters.add(builtinStringFilter);
+                    context.detectChanges();
                     expect(context.testComponent.latestState.filters).toEqual([
                         customFilter, testStringFilter, {property: "test", value: "1234"}
                     ]);
@@ -245,6 +266,52 @@ export default function(): void {
                 context.detectChanges();
                 expect(globalExpandableRows.hasExpandableRow).toBe(false);
                 expect(context.clarityElement.querySelector(".datagrid-column.datagrid-expandable-caret")).toBeNull();
+            });
+        });
+
+        describe("Single selection", function() {
+            let context: TestContext<Datagrid, SingleSelectionTest>;
+            let selection: Selection;
+
+            beforeEach(function() {
+                context = this.create(Datagrid, SingleSelectionTest, [Selection]);
+                selection = context.getClarityProvider(Selection);
+            });
+
+            describe("TypeScript API", function() {
+                // None for now, would duplicate tests of Selection provider
+            });
+
+            describe("Template API", function() {
+                it("sets the currentSingle binding", function() {
+                    expect(selection.currentSingle).toBeNull();
+                    context.testComponent.selected = 1;
+                    context.detectChanges();
+                    expect(selection.currentSingle).toEqual(1);
+                    context.testComponent.selected = null;
+                    context.detectChanges();
+                    expect(selection.currentSingle).toBeNull();
+                });
+
+                it("offers two way binding on the currentSingle value", function() {
+                    expect(selection.currentSingle).toBeNull();
+                    context.testComponent.selected = 1;
+                    context.detectChanges();
+                    expect(selection.currentSingle).toEqual(1);
+                    selection.currentSingle = 2;
+                    context.detectChanges();
+                    expect(context.testComponent.selected).toEqual(2);
+                });
+            });
+
+            describe("View", function() {
+                it("sets the proper selected class", function() {
+                    const row = context.clarityElement.querySelectorAll(".datagrid-row")[1];
+                    expect(row.classList.contains("datagrid-selected")).toBeFalsy();
+                    selection.currentSingle = 1;
+                    context.detectChanges();
+                    expect(row.classList.contains("datagrid-selected")).toBeTruthy();
+                });
             });
         });
 
@@ -352,6 +419,26 @@ class TrackByTest {
     trackByIndex(index: number, item: any) {
         return index;
     }
+}
+
+@Component({
+    template: `
+    <clr-datagrid [(clrDgSingleSelected)]="selected">
+        <clr-dg-column>First</clr-dg-column>
+        <clr-dg-column>Second</clr-dg-column>
+    
+        <clr-dg-row *clrDgItems="let item of items;" [clrDgItem]="item">
+            <clr-dg-cell>{{item}}</clr-dg-cell>
+            <clr-dg-cell>{{item * item}}</clr-dg-cell>
+        </clr-dg-row>
+    
+        <clr-dg-footer (click)="selected = null">{{selected}}</clr-dg-footer>
+    </clr-datagrid>
+`
+})
+class SingleSelectionTest {
+    items = [1, 2, 3];
+    selected: any;
 }
 
 @Component({
