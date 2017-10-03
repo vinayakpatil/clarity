@@ -127,7 +127,6 @@ export class Modal implements OnChanges, OnDestroy {
 
     @HostListener("body:keyup.escape")
     close(): void {
-        this.focusTrap.setPreviousFocus();  // Handles moving focus back to the element that had it before.
         if (this.stopClose) {
             this.altClose.emit(false);
             return;
@@ -140,6 +139,7 @@ export class Modal implements OnChanges, OnDestroy {
         // this was handled by the fadeDone event below, but that AnimationEvent is not firing in Angular 4.0.
         this._openChanged.emit(false);
         // SPECME
+        this.focusTrap.setPreviousFocus();  // Handles moving focus back to the element that had it before.
     }
 
     fadeDone(e: AnimationEvent) {
