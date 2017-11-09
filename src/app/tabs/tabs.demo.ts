@@ -5,11 +5,5 @@
  */
 import {Component, ViewEncapsulation} from "@angular/core";
 
-@Component({
-    moduleId: module.id,
-    encapsulation: ViewEncapsulation.None,
-    selector: "clr-tabs-demo",
-    styleUrls: ["./tabs.demo.css"],
-    templateUrl: "./tabs.demo.html"
-})
+@Component({encapsulation: ViewEncapsulation.None, selector: "clr-tabs-demo", templateUrl: "./tabs.demo.html"})
 export class TabsDemo {}

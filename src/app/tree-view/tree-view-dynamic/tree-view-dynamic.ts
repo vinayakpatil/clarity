@@ -5,6 +5,7 @@
  */
 import "clarity-icons/shapes/essential-shapes";
 import "clarity-icons/shapes/technology-shapes";
+import "clarity-icons/shapes/travel-shapes";
 import "clarity-icons/shapes/social-shapes";
 
 import {Component, Input} from "@angular/core";
@@ -92,9 +93,7 @@ const EXAMPLE_TS = `
 `;
 
 @Component({
-    moduleId: module.id,
     selector: "clr-tree-view-dynamic-demo",
-    // Note the .css extension here, not .scss. That's the best we can have at the moment.
     styleUrls: ["../tree-view.demo.scss"],
     templateUrl: "./tree-view-dynamic.html"
 })

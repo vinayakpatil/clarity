@@ -3,7 +3,7 @@
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
-import {AfterContentInit, Component, ContentChildren, QueryList} from "@angular/core";
+import {Component, ContentChildren, QueryList} from "@angular/core";
 
 import {IfActiveService} from "../../utils/conditional/if-active.service";
 import {IfOpenService} from "../../utils/conditional/if-open.service";
@@ -45,7 +45,7 @@ import {TabsService} from "./tabs-service";
     `,
     providers: [IfActiveService, IfOpenService, TabsService]
 })
-export class Tabs implements AfterContentInit {
+export class Tabs {
     @ContentChildren(TabLinkDirective, {descendants: true}) tabLinkDirectives: QueryList<TabLinkDirective>;
 
     constructor(public ifActiveService: IfActiveService, public ifOpenService: IfOpenService,
@@ -55,18 +55,13 @@ export class Tabs implements AfterContentInit {
         return this.tabsService.overflowTabs.indexOf(this.tabsService.activeTab) > -1;
     }
 
-    toggleOverflow(event: any) {
-        this.ifOpenService.toggleWithEvent(event);
-    }
-
     ngAfterContentInit() {
-        // if there's no active tab, set the one associated with this link as active
-        // it will be overridden if a tab created after this one sets it explicitly
-        // TODO: when we have another component using IfActiveService, the same logic might be
-        // needed. If this is a recurring pattern, let's consider moving this logic to IfActiveService.
-
-        if (!this.ifActiveService.current && !this.tabLinkDirectives.first.active) {
+        if (typeof this.ifActiveService.current === "undefined") {
             this.tabLinkDirectives.first.activate();
         }
+    }
+
+    toggleOverflow(event: any) {
+        this.ifOpenService.toggleWithEvent(event);
     }
 }

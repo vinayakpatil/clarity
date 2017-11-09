@@ -3,9 +3,10 @@
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
-import {Component, ElementRef, Injector, Input, Optional, SkipSelf} from "@angular/core";
+import {Component, ElementRef, Inject, Injector, Input, Optional, SkipSelf} from "@angular/core";
 import {AbstractPopover} from "../common/abstract-popover";
 import {Point} from "../common/popover";
+import {POPOVER_HOST_ANCHOR} from "../common/popover-host-anchor.token";
 
 @Component({
     selector: "clr-dropdown-menu",
@@ -17,7 +18,11 @@ import {Point} from "../common/popover";
     }
 })
 export class DropdownMenu extends AbstractPopover {
-    constructor(injector: Injector, @SkipSelf() parentHost: ElementRef, @Optional() @SkipSelf() nested: DropdownMenu) {
+    constructor(injector: Injector, @Optional() @Inject(POPOVER_HOST_ANCHOR) parentHost: ElementRef,
+                @Optional() @SkipSelf() nested: DropdownMenu) {
+        if (!parentHost) {
+            throw new Error("clr-dropdown-menu should only be used inside of a clr-dropdown");
+        }
         super(injector, parentHost);
         if (!nested) {
             // Default positioning for normal dropdown is bottom-left

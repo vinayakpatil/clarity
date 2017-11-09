@@ -5,12 +5,8 @@
  */
 import {Component} from "@angular/core";
 
-@Component({
-    moduleId: module.id,
-    selector: "clr-color-palette",
-    styleUrls: ["./color-palette.demo.scss"],
-    templateUrl: "./color-palette.demo.html"
-})
+@Component(
+    {selector: "clr-color-palette", styleUrls: ["./color-palette.demo.scss"], templateUrl: "./color-palette.demo.html"})
 export class ColorPalette {
     palettes = [
         {
@@ -99,7 +95,7 @@ export class ColorPalette {
             colors:
                 [
                     {value: "#000000", text: "light"}, {value: "#313131", text: "light"},
-                    {value: "#565656", text: "light", corePalette: true}, {value: "#747474", text: "light"},
+                    {value: "#565656", text: "light", corePalette: true}, {value: "#737373", text: "light"},
                     {value: "#9a9a9a", text: "dark"}, {value: "#cccccc", text: "dark"},
                     {value: "#dddddd", text: "dark"}, {value: "#eeeeee", text: "dark"},
                     {value: "#fafafa", text: "dark", corePalette: true}, {value: "#ffffff", text: "dark"}
